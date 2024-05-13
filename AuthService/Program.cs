@@ -1,3 +1,7 @@
+using AuthService.Events;
+using AuthService.Publisher;
+using AuthService.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+
+builder.Services.AddTransient<IUserRepository, InMemoryUserRepository>();
+builder.Services.AddTransient<IEventPublisher<UserCreatedEvent>, FakeEventPublisher>();
 
 var app = builder.Build();
 

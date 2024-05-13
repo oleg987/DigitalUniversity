@@ -1,6 +1,6 @@
 ﻿namespace AuthService.Publisher;
 
-public interface IEventPublisher<TEvent>
+public interface IEventPublisher<in TEvent>
 {
-    void Publish(TEvent message);
+    Task Publish(TEvent message, CancellationToken cancellationToken = default);
 }

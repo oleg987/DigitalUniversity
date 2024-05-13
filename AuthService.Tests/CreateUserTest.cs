@@ -2,30 +2,32 @@
 using AuthService.Entities;
 using AuthService.Publisher;
 using AuthService.Repositories;
+using AuthService.Requests;
 
 namespace AuthService.Tests;
 
-public class RegisterUserTest
+public class CreateUserTest
 {
     [Fact]
-    public void RegisterUser_Success()
+    public async Task CreateUser_Success()
     {
         // Arrange
-        var id = Guid.NewGuid(); // Guid.Parse("{static_value}")
         var name = "John Connor";
         var email = "j.connor@example.com";
         var role = UserRole.Student;
+
+        var request = new CreateUserRequest(name, email, role);
 
         var repository = new InMemoryUserRepository();
 
         var publisher = new FakeEventPublisher();
         
-        var command = new RegisterUserCommand(id, name, email, role, repository, publisher);
+        var command = new CreateUserCommand(request, repository, publisher);
         
         // Act
-        command.Execute();
+        await command.Execute();
         
-        var createdUser = repository.Get(id);
+        var createdUser = await repository.Get(request.Id);
 
         var createdUserEvent = publisher.Messages
             .Single(m => m.Email == email);

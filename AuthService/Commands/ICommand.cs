@@ -2,5 +2,5 @@
 
 public interface ICommand
 {
-    public void Execute();
+    public Task Execute(CancellationToken cancellationToken = default);
 }

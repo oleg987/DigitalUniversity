@@ -5,15 +5,14 @@ namespace AuthService.Repositories;
 public class InMemoryUserRepository : IUserRepository
 {
     private readonly List<User> _users = [];
-
-
-    public void Add(User user)
+    public Task Add(User user, CancellationToken cancellationToken = default)
     {
         _users.Add(user);
+        return Task.CompletedTask;
     }
 
-    public User? Get(Guid id)
+    public Task<User?> Get(Guid id, CancellationToken cancellationToken = default)
     {
-        return _users.FirstOrDefault(u => u.Id == id);
+        return Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
     }
 }

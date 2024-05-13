@@ -2,41 +2,33 @@
 using AuthService.Events;
 using AuthService.Publisher;
 using AuthService.Repositories;
+using AuthService.Requests;
 
 namespace AuthService.Commands;
 
-public class RegisterUserCommand : ICommand
+public class CreateUserCommand : ICommand
 {
-    private Guid _id;
-    private string _email;
-    private string _name;
-    private UserRole _role;
+    private readonly CreateUserRequest _request;
     private readonly IUserRepository _repository;
     private readonly IEventPublisher<UserCreatedEvent> _publisher;
 
-    public RegisterUserCommand(Guid id,
-        string name,
-        string email,
-        UserRole role,
+    public CreateUserCommand(CreateUserRequest request,
         IUserRepository repository,
         IEventPublisher<UserCreatedEvent> publisher)
     {
-        _id = id;
-        _email = email;
-        _name = name;
-        _role = role;
+        _request = request;
         _repository = repository;
         _publisher = publisher;
     }
 
-    public void Execute()
+    public async Task Execute(CancellationToken cancellationToken = default)
     {
-        var user = new User(_id, _name, _email, _role);
+        var user = new User(_request.Id, _request.Name, _request.Email, _request.Role);
         
-        _repository.Add(user);
+        await _repository.Add(user, cancellationToken);
 
         var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), user.Email, user.InviteCode);
         
-        _publisher.Publish(userCreatedEvent);
+        await _publisher.Publish(userCreatedEvent, cancellationToken);
     }
 }
