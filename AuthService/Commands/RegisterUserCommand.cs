@@ -15,8 +15,8 @@ public class RegisterUserCommand : ICommand
     private readonly IEventPublisher<UserCreatedEvent> _publisher;
 
     public RegisterUserCommand(Guid id,
-        string email,
         string name,
+        string email,
         UserRole role,
         IUserRepository repository,
         IEventPublisher<UserCreatedEvent> publisher)
@@ -31,6 +31,12 @@ public class RegisterUserCommand : ICommand
 
     public void Execute()
     {
-        throw new NotImplementedException();
+        var user = new User(_id, _name, _email, _role);
+        
+        _repository.Add(user);
+
+        var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), user.Email, user.InviteCode);
+        
+        _publisher.Publish(userCreatedEvent);
     }
 }

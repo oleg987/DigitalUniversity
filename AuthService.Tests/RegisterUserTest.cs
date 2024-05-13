@@ -20,7 +20,7 @@ public class RegisterUserTest
 
         var publisher = new FakeEventPublisher();
         
-        var command = new RegisterUserCommand(id, email, name, role, repository, publisher);
+        var command = new RegisterUserCommand(id, name, email, role, repository, publisher);
         
         // Act
         command.Execute();
