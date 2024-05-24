@@ -2,6 +2,7 @@
 using AuthService.Repositories;
 using AuthService.Requests;
 using Common.Events;
+using Common.Publisher;
 using Domain.Entities;
 
 namespace AuthService.Commands;

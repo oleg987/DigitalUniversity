@@ -4,6 +4,7 @@ using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
 using Common.Events;
+using Common.Publisher;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Controllers;
