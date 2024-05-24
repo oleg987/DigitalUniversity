@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AuthService.Entities;
+using Domain.Entities;
 
 namespace AuthService.Requests;
 

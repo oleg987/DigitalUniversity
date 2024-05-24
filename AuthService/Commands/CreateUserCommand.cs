@@ -1,8 +1,8 @@
-﻿using AuthService.Entities;
-using AuthService.Publisher;
+﻿using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
 using Common.Events;
+using Domain.Entities;
 
 namespace AuthService.Commands;
 

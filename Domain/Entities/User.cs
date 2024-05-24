@@ -1,4 +1,4 @@
-﻿namespace AuthService.Entities;
+﻿namespace Domain.Entities;
 
 public enum UserRole
 {

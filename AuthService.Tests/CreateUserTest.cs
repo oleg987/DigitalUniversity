@@ -1,8 +1,8 @@
 ﻿using AuthService.Commands;
-using AuthService.Entities;
 using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
+using Domain.Entities;
 
 namespace AuthService.Tests;
 

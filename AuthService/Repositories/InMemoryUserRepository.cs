@@ -1,4 +1,5 @@
-﻿using AuthService.Entities;
+﻿
+using Domain.Entities;
 
 namespace AuthService.Repositories;
 
