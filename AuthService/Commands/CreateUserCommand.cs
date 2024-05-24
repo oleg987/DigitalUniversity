@@ -1,6 +1,7 @@
 ﻿using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
+using Common.Commands;
 using Common.Events;
 using Common.Publisher;
 using Domain.Entities;

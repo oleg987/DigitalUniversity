@@ -1,4 +1,4 @@
-﻿namespace AuthService.Commands;
+﻿namespace Common.Commands;
 
 public interface ICommand
 {
