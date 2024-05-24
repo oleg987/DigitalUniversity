@@ -1,8 +1,8 @@
 ﻿using AuthService.Entities;
-using AuthService.Events;
 using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
+using Common.Events;
 
 namespace AuthService.Commands;
 
@@ -27,7 +27,7 @@ public class CreateUserCommand : ICommand
         
         await _repository.Add(user, cancellationToken);
 
-        var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), user.Email, user.InviteCode);
+        var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), Guid.NewGuid(), user.Email, user.InviteCode);
         
         await _publisher.Publish(userCreatedEvent, cancellationToken);
     }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using AuthService.Commands;
-using AuthService.Events;
 using AuthService.Publisher;
 using AuthService.Repositories;
 using AuthService.Requests;
+using Common.Events;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Controllers;

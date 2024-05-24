@@ -1,6 +1,6 @@
-using AuthService.Events;
 using AuthService.Publisher;
 using AuthService.Repositories;
+using Common.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 

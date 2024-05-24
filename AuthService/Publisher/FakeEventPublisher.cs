@@ -1,4 +1,4 @@
-﻿using AuthService.Events;
+﻿using Common.Events;
 
 namespace AuthService.Publisher;
 
