@@ -16,4 +16,12 @@
       <ProjectReference Include="..\Domain\Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\" />
+      <Folder Include="Controllers\" />
+      <Folder Include="Publisher\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Requests\" />
+    </ItemGroup>
+
 </Project>

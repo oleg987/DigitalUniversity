@@ -1,8 +1,4 @@
-﻿using AuthService.Commands;
-using AuthService.Publisher;
-using AuthService.Repositories;
-using AuthService.Requests;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace AuthService.Tests;
 
@@ -11,7 +7,7 @@ public class CreateUserTest
     [Fact]
     public async Task CreateUser_Success()
     {
-        // Arrange
+        /*// Arrange
         var name = "John Connor";
         var email = "j.connor@example.com";
         var role = UserRole.Student;
@@ -38,13 +34,15 @@ public class CreateUserTest
         Assert.Equal(email, createdUser.Email);
         Assert.Equal(role, createdUser.Role);
         
-        Assert.Equal(createdUser.InviteCode, createdUserEvent.InviteCode);
+        Assert.Equal(createdUser.InviteCode, createdUserEvent.InviteCode);*/
+        
+        Assert.Fail();
     }
     
     [Fact]
     public async Task CreateUser_InvalidEmail()
     {
-        var name = "John Connor";
+        /*var name = "John Connor";
         var email = "j-connor.example.com";
         var role = UserRole.Student;
 
@@ -64,16 +62,17 @@ public class CreateUserTest
             .SingleOrDefault(m => m.Email == email);
         
         Assert.Null(createdUser);
-        Assert.Null(createdUserEvent);
+        Assert.Null(createdUserEvent);*/
+        
+        Assert.Fail();
     }
     
     [Fact]
     public async Task CreateUser_InvalidName()
     {
-        var name = "J";
+        /*var name = "J";
         var email = "j-connor@example.com";
         var role = UserRole.Student;
-
         var request = new CreateUserRequest(name, email, role);
 
         var repository = new InMemoryUserRepository();
@@ -90,6 +89,8 @@ public class CreateUserTest
             .SingleOrDefault(m => m.Email == email);
         
         Assert.Null(createdUser);
-        Assert.Null(createdUserEvent);
+        Assert.Null(createdUserEvent);*/
+        
+        Assert.Fail();
     }
 }
