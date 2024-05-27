@@ -9,11 +9,15 @@ public enum UserRole
 
 public class User
 {
-    public Guid Id { get; }
-    public string Name { get; }
-    public string Email { get; }
-    public UserRole Role { get; }
-    public string InviteCode { get; }
+    public Guid Id { get; private set; }
+    public string Name { get; private set; }
+    
+    /// <summary>
+    /// User e-mail. Unique.
+    /// </summary>
+    public string Email { get; private set; }
+    public UserRole Role { get; private set; }
+    public string InviteCode { get; private set; }
 
     public User(Guid id, string name, string email, UserRole role)
     {
@@ -24,6 +28,14 @@ public class User
         Email = email;
         Role = role;
         InviteCode = GenerateInvite();
+    }
+
+    /// <summary>
+    /// For EF Core.
+    /// </summary>
+    private User()
+    {
+        
     }
 
     private string GenerateInvite()
