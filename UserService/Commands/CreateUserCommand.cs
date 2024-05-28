@@ -30,7 +30,7 @@ public class CreateUserCommand : ICommand
 
         await _userDbContext.SaveChangesAsync(cancellationToken);
 
-        var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), Guid.NewGuid(), user.Email, user.InviteCode);
+        var userCreatedEvent = new UserCreatedEvent(Guid.NewGuid(), Guid.NewGuid(),  user.Id, (int)user.Role, user.Email);
         
         await _publisher.Publish(userCreatedEvent, cancellationToken);
     }

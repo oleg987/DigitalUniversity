@@ -4,12 +4,14 @@ namespace Common.Events;
 
 public class UserCreatedEvent : EventBase
 {
+    public Guid UserId { get; init; }
+    public int UserRole { get; init; } // TODO: ??? Don`t want add reference from Common to Domain or vise versa. 
     public string Email { get; init; }
-    public string InviteCode { get; init; }
 
-    public UserCreatedEvent(Guid id, Guid transientId, string email, string inviteCode) : base(id, transientId)
+    public UserCreatedEvent(Guid id, Guid transientId, Guid userId, int userRole, string email) : base(id, transientId)
     {
+        UserId = userId;
+        UserRole = userRole;
         Email = email;
-        InviteCode = inviteCode;
     }
 }
