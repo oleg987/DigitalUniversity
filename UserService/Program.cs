@@ -1,4 +1,8 @@
+using Common.Events;
+using Common.Publisher;
+using Common.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using UserService.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +21,19 @@ var dbConnectionString = builder.Configuration.GetConnectionString("UserDb");
 builder.Services.AddDbContext<UserDbContext>(opt => 
     opt.UseNpgsql(dbConnectionString, o => 
         o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
+#endregion
+
+#region Add RedisSettings
+
+builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redis"));
+builder.Services.AddScoped(rs => rs.GetRequiredService<IOptionsSnapshot<RedisSettings>>().Value);
+
+#endregion
+
+#region Add EventPublishers
+
+builder.Services.AddTransient<IEventPublisher<UserCreatedEvent>, RedisEventPublisher<UserCreatedEvent>>();
 
 #endregion
 
