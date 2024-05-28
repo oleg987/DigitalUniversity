@@ -19,7 +19,7 @@ public class RedisEventPublisher<TEvent> : IEventPublisher<TEvent>
     {
         var connectionString = $"{_settings.Host}:{_settings.Port}";
 
-        var channel = nameof(TEvent);
+        var channel = typeof(TEvent).Name;
 
         await using var connection = await ConnectionMultiplexer.ConnectAsync(connectionString);
 
