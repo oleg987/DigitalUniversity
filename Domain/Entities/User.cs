@@ -17,7 +17,6 @@ public class User
     /// </summary>
     public string Email { get; private set; }
     public UserRole Role { get; private set; }
-    public string InviteCode { get; private set; }
 
     public User(Guid id, string name, string email, UserRole role)
     {
@@ -27,7 +26,6 @@ public class User
         ValidateEmail(email);
         Email = email;
         Role = role;
-        InviteCode = GenerateInvite();
     }
 
     /// <summary>
@@ -36,11 +34,6 @@ public class User
     private User()
     {
         
-    }
-
-    private string GenerateInvite()
-    {
-        return Guid.NewGuid().ToString();
     }
 
     private static void ValidateEmail(string email)
