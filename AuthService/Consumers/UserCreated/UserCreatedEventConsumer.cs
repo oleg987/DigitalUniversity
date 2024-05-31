@@ -1,5 +1,8 @@
 ﻿using System.Text.Json;
+using AuthService.Commands;
+using AuthService.Data;
 using Common.Events;
+using Common.Publisher;
 using Common.Settings;
 using StackExchange.Redis;
 
@@ -35,6 +38,14 @@ public class UserCreatedEventConsumer : BackgroundService
 
     private async Task Handle(UserCreatedEvent message)
     {
-        
+        using var scope = _provider.CreateScope();
+
+        await using var ctx = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+
+        var publisher = scope.ServiceProvider.GetRequiredService<IEventPublisher<AuthInfoCreatedEvent>>();
+
+        var command = new CreateAuthInfoCommand(message, ctx, publisher);
+
+        await command.Execute();
     }
 }
