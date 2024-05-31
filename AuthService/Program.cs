@@ -1,5 +1,8 @@
+using AuthService.Consumers.UserCreated;
 using AuthService.Data;
+using Common.Settings;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +22,15 @@ builder.Services.AddDbContext<AuthDbContext>(opt =>
         o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
 #endregion
+
+#region Add RedisSettings
+
+builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redis"));
+builder.Services.AddScoped(rs => rs.GetRequiredService<IOptionsSnapshot<RedisSettings>>().Value);
+
+#endregion
+
+builder.Services.AddHostedService<UserCreatedEventConsumer>();
 
 var app = builder.Build();
 

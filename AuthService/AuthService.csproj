@@ -24,7 +24,6 @@
 
     <ItemGroup>
       <Folder Include="Commands\" />
-      <Folder Include="Consumers\" />
       <Folder Include="Controllers\" />
       <Folder Include="Publisher\" />
       <Folder Include="Requests\" />
