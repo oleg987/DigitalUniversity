@@ -1,3 +1,6 @@
+using Common.Settings;
+using NotificationService.Consumers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,14 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+
+#region Add RedisSettings
+
+builder.Services.AddSingleton(builder.Configuration.GetSection("Redis").Get<RedisSettings>()!);
+
+#endregion
+
+builder.Services.AddHostedService<AuthInfoCreatedEventConsumer>();
 
 var app = builder.Build();
 
