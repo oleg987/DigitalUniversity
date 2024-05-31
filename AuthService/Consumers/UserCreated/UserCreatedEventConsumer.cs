@@ -1,56 +1,40 @@
-﻿using System.ComponentModel;
-using System.Text.Json;
-using Common.Consumers;
+﻿using System.Text.Json;
 using Common.Events;
 using Common.Settings;
 using StackExchange.Redis;
 
 namespace AuthService.Consumers.UserCreated;
 
-public class UserCreatedEventConsumer : IHostedService, IEventConsumer<UserCreatedEvent>
+public class UserCreatedEventConsumer : BackgroundService
 {
     private readonly IServiceProvider _provider;
+    private readonly RedisSettings _redisSettings;
+    private readonly ConnectionMultiplexer _connection;
+    private readonly string _channel = nameof(UserCreatedEvent);
+    private readonly ILogger<UserCreatedEventConsumer> _logger;
 
-    public UserCreatedEventConsumer(IServiceProvider provider)
+    public UserCreatedEventConsumer(IServiceProvider provider, RedisSettings redisSettings, ILogger<UserCreatedEventConsumer> logger)
     {
         _provider = provider;
+        _redisSettings = redisSettings;
+        _logger = logger;
+        _connection = ConnectionMultiplexer.Connect($"{_redisSettings.Host}:{_redisSettings.Port}");
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        return Consume(cancellationToken);
-    }
+        var subscriber = _connection.GetSubscriber();
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    public async Task Consume(CancellationToken cancellationToken = default)
-    {
-        using var scope = _provider.CreateScope();
-        
-        var redisSettings = scope.ServiceProvider.GetRequiredService<RedisSettings>();
-        
-        var connectionString = $"{redisSettings.Host}:{redisSettings.Port}";
-
-        var channel = nameof(UserCreatedEvent);
-
-        await using var connection = await ConnectionMultiplexer.ConnectAsync(connectionString);
-
-        var queue = connection.GetSubscriber();
-
-        await queue.SubscribeAsync(channel, async (c, m) =>
+        await subscriber.SubscribeAsync(_channel, (c, m) =>
         {
             var message = JsonSerializer.Deserialize<UserCreatedEvent>(m);
-            await HandleMessage(message);
-        });
 
-        await Task.Delay(-1, cancellationToken);
+            Handle(message);
+        });
     }
 
-    private async Task HandleMessage(UserCreatedEvent? message)
+    private async Task Handle(UserCreatedEvent message)
     {
-        throw new NotImplementedException();
+        
     }
 }

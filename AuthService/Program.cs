@@ -25,8 +25,7 @@ builder.Services.AddDbContext<AuthDbContext>(opt =>
 
 #region Add RedisSettings
 
-builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redis"));
-builder.Services.AddScoped(rs => rs.GetRequiredService<IOptionsSnapshot<RedisSettings>>().Value);
+builder.Services.AddSingleton(builder.Configuration.GetSection("Redis").Get<RedisSettings>()!);
 
 #endregion
 
