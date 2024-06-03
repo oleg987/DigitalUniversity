@@ -14,4 +14,9 @@ public class Subject
         Professor = professor;
         Students = new HashSet<Student>();
     }
+
+    private Subject()
+    {
+        
+    }
 }
