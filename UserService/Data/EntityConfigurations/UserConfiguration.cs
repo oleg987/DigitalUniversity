@@ -14,5 +14,12 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.HasIndex(e => e.Email)
             .IsUnique();
+
+        builder.HasDiscriminator(e => e.Role)
+            .HasValue<Student>(UserRole.Student)
+            .HasValue<Professor>(UserRole.Professor)
+            .HasValue<StudyDepartment>(UserRole.StudyDepartment);
+
+        builder.HasIndex(e => e.Role);
     }
 }
