@@ -14,6 +14,11 @@ public class Student : User
     /// </summary>
     protected Student() : base()
     {
-        
+        Subjects = new HashSet<Subject>();
+    }
+
+    public void SelectSubject(Subject subject)
+    {
+        Subjects.Add(subject);
     }
 }
