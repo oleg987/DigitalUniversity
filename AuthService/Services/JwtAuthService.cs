@@ -34,11 +34,13 @@ public class JwtAuthService
 
         var accessToken = await GenerateAccessToken(user, cancellationToken);
 
-        var refreshToken = GenerateRefreshToken();
-        
-        var refreshTokenExpires = DateTimeOffset.UtcNow.Add(TimeSpan.FromDays(7)).ToUnixTimeSeconds();
+        var refreshToken = RefreshToken.Create(user.UserId, TimeSpan.FromDays(7));
 
-        return new JwtTokenResponse(accessToken, refreshToken, refreshTokenExpires);
+        _context.RefreshTokens.Add(refreshToken);
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return new JwtTokenResponse(accessToken, refreshToken.Token, refreshToken.Expires);
     }
 
     private async Task<string> GenerateAccessToken(AuthInfo user, CancellationToken cancellationToken)
@@ -59,14 +61,5 @@ public class JwtAuthService
         var accessToken = new JwtSecurityTokenHandler().WriteToken(token)!;
 
         return accessToken;
-    }
-    
-    private static string GenerateRefreshToken()
-    {
-        var bytes = new byte[64];
-        using var rng = RandomNumberGenerator.Create();
-        rng.GetBytes(bytes);
-
-        return Convert.ToBase64String(bytes);
     }
 }
