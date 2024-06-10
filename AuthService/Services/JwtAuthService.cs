@@ -32,6 +32,31 @@ public class JwtAuthService
             throw new Exception("Invalid password.");
         }
 
+        var jwtTokenResponse = await GenerateJwtTokenResponse(user, cancellationToken);
+
+        return jwtTokenResponse;
+    }
+
+    public async Task<JwtTokenResponse> RefreshAsync(RefreshTokenRequest request, CancellationToken cancellationToken)
+    {
+        var refreshToken = await _context.RefreshTokens
+                .SingleAsync(t => t.Token == request.RefreshToken, cancellationToken);
+
+        if (refreshToken.IsExpired())
+        {
+            throw new Exception("Refresh token is expired.");
+        }
+        
+        var user = await _context.AuthInfos
+            .SingleAsync(u => u.UserId == refreshToken.UserId, cancellationToken);
+        
+        var jwtTokenResponse = await GenerateJwtTokenResponse(user, cancellationToken);
+
+        return jwtTokenResponse;
+    }
+
+    private async Task<JwtTokenResponse> GenerateJwtTokenResponse(AuthInfo user, CancellationToken cancellationToken)
+    {
         var accessToken = await GenerateAccessToken(user, cancellationToken);
 
         var refreshToken = RefreshToken.Create(user.UserId, TimeSpan.FromDays(7));
@@ -39,7 +64,7 @@ public class JwtAuthService
         _context.RefreshTokens.Add(refreshToken);
 
         await _context.SaveChangesAsync(cancellationToken);
-
+        
         return new JwtTokenResponse(accessToken, refreshToken.Token, refreshToken.Expires);
     }
 

@@ -33,8 +33,8 @@ public class RefreshToken
         return new RefreshToken(token, userId, refreshTokenExpires);
     }
 
-    public bool IsNotExpired()
+    public bool IsExpired()
     {
-        return DateTimeOffset.UtcNow.ToUnixTimeSeconds() <= Expires;
+        return !(DateTimeOffset.UtcNow.ToUnixTimeSeconds() <= Expires);
     }
 }
