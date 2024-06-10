@@ -17,7 +17,7 @@ public class AuthInfo
     {
         Id = Guid.NewGuid();
         UserId = userId;
-        Email = email;
+        Email = email.ToLower();
         InviteCode = GenerateInviteCode();
         Role = (UserRole)role;
         IsActivated = false;
@@ -86,5 +86,17 @@ public class AuthInfo
         }
 
         return builder.ToString();
+    }
+
+    public bool CheckPassword(string password)
+    {
+        if (!IsActivated)
+        {
+            throw new Exception("User is not activated.");
+        }
+        
+        var receivedPasswordHash = HashFunction(password);
+
+        return PasswordHash == receivedPasswordHash;
     }
 }

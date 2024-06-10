@@ -14,11 +14,11 @@ public class ClaimService : IClaimService
         _context = context;
     }
 
-    public async Task<List<Claim>> ListAsync(Guid userId)
+    public async Task<List<Claim>> ListAsync(Guid userId, CancellationToken cancellationToken)
     {
         var user = await _context.AuthInfos
             .AsNoTracking()
-            .SingleAsync(u => u.UserId == userId);
+            .SingleAsync(u => u.UserId == userId, cancellationToken);
 
         var claims = new List<Claim>();
         
