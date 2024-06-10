@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Common.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UserService.Commands;
@@ -8,6 +10,7 @@ using UserService.Responses;
 
 namespace UserService.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class SubjectController : ControllerBase
@@ -18,15 +21,26 @@ public class SubjectController : ControllerBase
     {
         _context = context;
     }
-
-    // TODO: get professorId from claims.
+    
     [HttpPost]
+    [Authorize(Roles = "Professor")]
     public async Task<IActionResult> Create([Required] CreateSubjectRequest request,
         CancellationToken cancellationToken)
     {
+        Guid professorId;
+
+        if (User.HasClaim(c => c.Type == ClaimTypeConstants.UserId))
+        {
+            professorId = Guid.Parse(User.Claims.Single(c => c.Type == ClaimTypeConstants.UserId).Value);
+        }
+        else
+        {
+            return Forbid();
+        }
+        
         try
         {
-            var command = new CreateSubjectCommand(_context, request);
+            var command = new CreateSubjectCommand(_context, request, professorId);
 
             await command.Execute(cancellationToken);
         
@@ -36,30 +50,6 @@ public class SubjectController : ControllerBase
         {
             return BadRequest();
         }
-    }
-
-    [HttpGet("{studentId:guid}")]
-    public async Task<IActionResult> ByStudentId([Required] Guid studentId, CancellationToken cancellationToken)
-    {
-        var subjects = await _context.Subjects
-            .Where(s => s.Students.Any(st => st.Id == studentId))
-            .OrderBy(s => s.Title)
-            .Select(s => new SubjectResponse(s.Id, s.Title))
-            .ToListAsync(cancellationToken);
-
-        return Ok(subjects);
-    }
-    
-    [HttpGet("{professorId:guid}")]
-    public async Task<IActionResult> ByProfessorId([Required] Guid professorId, CancellationToken cancellationToken)
-    {
-        var subjects = await _context.Subjects
-            .Where(s => s.Professor.Id == professorId)
-            .OrderBy(s => s.Title)
-            .Select(s => new SubjectResponse(s.Id, s.Title))
-            .ToListAsync(cancellationToken);
-
-        return Ok(subjects);
     }
     
     [HttpGet]
