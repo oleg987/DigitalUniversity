@@ -11,6 +11,11 @@ public class UserDbContext : DbContext
     }
 
     public DbSet<User> Users { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Professor> Professors { get; set; }
+    public DbSet<StudyDepartment> StudyDepartments { get; set; }
+
+    public DbSet<Subject> Subjects { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

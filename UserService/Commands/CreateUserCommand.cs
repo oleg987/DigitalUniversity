@@ -3,6 +3,7 @@ using Common.Events;
 using Common.Publisher;
 using Domain.Entities;
 using UserService.Data;
+using UserService.Factories;
 using UserService.Requests;
 
 namespace UserService.Commands;
@@ -12,6 +13,7 @@ public class CreateUserCommand : ICommand
     private readonly CreateUserRequest _request;
     private readonly UserDbContext _userDbContext;
     private readonly IEventPublisher<UserCreatedEvent> _publisher;
+    private readonly UserFactory _userFactory;
 
     public CreateUserCommand(CreateUserRequest request,
         UserDbContext userDbContext,
@@ -20,11 +22,12 @@ public class CreateUserCommand : ICommand
         _request = request;
         _userDbContext = userDbContext;
         _publisher = publisher;
+        _userFactory = new UserFactory();
     }
 
     public async Task Execute(CancellationToken cancellationToken = default)
     {
-        var user = new User(_request.Id, _request.Name, _request.Email, _request.Role);
+        var user = _userFactory.Create(_request);
 
         _userDbContext.Users.Add(user);
 

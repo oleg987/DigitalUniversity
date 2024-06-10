@@ -7,7 +7,7 @@ public enum UserRole
     StudyDepartment = 3
 }
 
-public class User
+public abstract class User
 {
     public Guid Id { get; private set; }
     public string Name { get; private set; }
@@ -18,7 +18,7 @@ public class User
     public string Email { get; private set; }
     public UserRole Role { get; private set; }
 
-    public User(Guid id, string name, string email, UserRole role)
+    protected User(Guid id, string name, string email, UserRole role)
     {
         Id = id;
         ValidateName(name);
@@ -31,7 +31,7 @@ public class User
     /// <summary>
     /// For EF Core.
     /// </summary>
-    private User()
+    protected User()
     {
         
     }
@@ -54,5 +54,17 @@ public class User
         {
             throw new ArgumentException("Invalid name. Name too short.");
         }
+    }
+}
+
+public class StudyDepartment : User
+{
+    public StudyDepartment(Guid id, string name, string email) : base(id, name, email, UserRole.StudyDepartment)
+    {
+    }
+
+    protected StudyDepartment() : base()
+    {
+        
     }
 }

@@ -2,6 +2,7 @@
 using Common.Events;
 using Common.Publisher;
 using Common.Settings;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Commands;
 using UserService.Data;

@@ -1,5 +1,6 @@
 using AuthService.Consumers.UserCreated;
 using AuthService.Data;
+using AuthService.Services;
 using Common.Events;
 using Common.Publisher;
 using Common.Settings;
@@ -30,9 +31,19 @@ builder.Services.AddSingleton(builder.Configuration.GetSection("Redis").Get<Redi
 
 #endregion
 
+#region Jwt
+
+builder.Services.AddSingleton(builder.Configuration.GetSection("Jwt").Get<JwtCredentials>()!);
+
+#endregion
+
 builder.Services.AddHostedService<UserCreatedEventConsumer>();
 
 builder.Services.AddTransient<IEventPublisher<AuthInfoCreatedEvent>, RedisEventPublisher<AuthInfoCreatedEvent>>();
+
+builder.Services.AddTransient<JwtAuthService>();
+
+builder.Services.AddTransient<IClaimService, ClaimService>();
 
 var app = builder.Build();
 

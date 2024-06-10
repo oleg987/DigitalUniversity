@@ -17,7 +17,7 @@ public class AuthInfo
     {
         Id = Guid.NewGuid();
         UserId = userId;
-        Email = email;
+        Email = email.ToLower();
         InviteCode = GenerateInviteCode();
         Role = (UserRole)role;
         IsActivated = false;
@@ -44,16 +44,11 @@ public class AuthInfo
         return Convert.ToBase64String(bytes);
     }
 
-    public void Activate(string invite, string password)
+    public void Activate(string password)
     {
         if (IsActivated)
         {
             throw new Exception("User is already activated.");
-        }
-
-        if (InviteCode != invite)
-        {
-            throw new Exception("Invalid invite code.");
         }
 
         if (password.Length < 6)
@@ -86,5 +81,17 @@ public class AuthInfo
         }
 
         return builder.ToString();
+    }
+
+    public bool CheckPassword(string password)
+    {
+        if (!IsActivated)
+        {
+            throw new Exception("User is not activated.");
+        }
+        
+        var receivedPasswordHash = HashFunction(password);
+
+        return PasswordHash == receivedPasswordHash;
     }
 }
